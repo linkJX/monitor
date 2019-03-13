@@ -4,10 +4,10 @@ from email.header import Header
 
 
 def send(content, subject):
-    from_addr = 'link690@126.com'
-    password = 'qwertyui0p'
-    smtp_server = 'smtp.126.com'
-    to_addr = 'pacinolin@126.com'
+    from_addr = ''  # 你的发信Email
+    password = ''  # 邮箱密码
+    smtp_server = ''  # 邮箱服务器地址
+    to_addr = ''  # 收信邮箱
 
     msg = MIMEText(content, 'html', 'utf-8')
     msg['From'] = from_addr

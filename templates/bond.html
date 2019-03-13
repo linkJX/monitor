@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading" style="background-color: rgb(119, 72, 152); color: white"><b>今天有可投资的可转债{{ info[0] }}只。</b></div>
+        <div class="panel-body">
+            <p>上个交易日可转债整体大盘的涨跌为{{ '%.2f%%' % info[1] }}。 </p>
+        </div>
+
+        <ul class="list-group">
+            {% for h in info[2] %}
+            {% if h[1] < h[2] %}
+            <li class="list-group-item">
+                <b>{{ h[0] }}</b>现价为<b style="color: rgb(119, 72, 152)">{{ h[1] }}</b>，距离第一条线还差{{ '%.2f%%' % ((h[2]-h[1])*100/h[1]) }}。
+            </li>
+            {% elif h[1] > h[2] and h[1] < h[3] %}
+            <li class="list-group-item">
+                <b>{{ h[0] }}</b>现价为<b style="color: rgb(119, 72, 152)">{{ h[1] }}</b>，距离第二条线还差{{ '%.2f%%' % ((h[3]-h[1])*100/h[1]) }}。
+            </li>
+            {% else %}
+            <li class="list-group-item">
+                <b>{{ h[0] }}</b>现价为<b style="color: rgb(119, 72, 152)">{{ h[1] }}</b>，超过了第二条线{{ '%.2f%%' % ((h[1]-h[3])*100/h[3]) }}。
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+
+        <!-- Table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="background-color: rgb(119, 72, 152); color: white">转债id</th>
+                    <th style="background-color: rgb(119, 72, 152); color: white">转债名称</th>
+                    <th style="background-color: rgb(119, 72, 152); color: white">现价</th>
+                    <th style="background-color: rgb(119, 72, 152); color: white">线一</th>
+                    <th style="background-color: rgb(119, 72, 152); color: white">线二</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in info[3] %}
+                <tr class="text-center">
+                    <td>{{ item[0] }}</td>
+                    {% if ((item[6]-item[5])/item[5]) < 0.1 %}
+                    <td>{{ item[1] }}<span class="label label-danger">{{ '%.2f%%' % ((item[6]-item[5])/item[5]) }}</span></td>
+                    {% elif ((item[5]-item[7])/item[5]) < 0.1 %}
+                    <td>{{ item[1] }}<span class="label label-success">{{ '%.2f%%' % ((item[5]-item[7])/item[5]) }}</span></td>
+                    {% else %}
+                    <td>{{ item[1] }}</td>
+                    {% endif %}
+
+                    {% if item[2] < 100 %}
+                    <td style="color: rgb(119, 72, 152)"><b>{{ item[2] }}</b></td>
+                    {% else %}
+                    <td>{{ item[2] }}</td>
+                    {% endif %}
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="background-color: rgb(119, 72, 152); color: white">转债id</th>
+                    <th style="background-color: rgb(119, 72, 152); color: white">转债名称</th>
+                    <th style="background-color: rgb(119, 72, 152); color: white">溢价率</th>
+                    <th style="background-color: rgb(119, 72, 152); color: white">PB</th>
+                    <th style="background-color: rgb(119, 72, 152); color: white">转债占比</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in info[4] %}
+                <tr class="text-center">
+                    <td>{{ item[0] }}</td>
+                    {% if item[5] < 0 %}
+                    <td>{{ item[1] }}</td>
+                    {% elif item[5] > 0 and item[5] < 20 %}
+                    <td style="color: rgb(119, 72, 152)"><b>{{ item[1] }}</b></td>
+                    {% else %}
+                    <td style="color: rgb(119, 72, 152)">{{ item[1] }}</td>
+                    {% endif %}
+
+                    {% if item[2] > 0 %}
+                    <td style="color: rgb(228, 115, 79)">{{ '%.2f%%' % item[2] }}</td>
+                    {% elif item[2] < 0 %}
+                    <td style="color: rgb(11, 132, 87)">{{ '%.2f%%' % item[2] }}</td>
+                    {% else %}
+                    <td>{{ '%.2f%%' % item[2] }}</td>
+                    {% endif %}
+                    <td>{{ item[3] }}</td>
+                    <td>{{ '%.2f%%' % item[4] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
